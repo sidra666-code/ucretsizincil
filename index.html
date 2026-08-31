@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Ücretsiz İncil</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f6f7fb;
+            color: #202124;
+        }
+
+        /* ÜST ALAN */
+
+        header {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #24163d, #4d2d70);
+            color: white;
+            padding: 55px 22px 110px;
+            text-align: center;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            background: rgba(255,255,255,0.07);
+            border-radius: 50%;
+            top: -150px;
+            right: -90px;
+        }
+
+        header::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -70px;
+        }
+
+        .logo {
+            position: relative;
+            z-index: 2;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            position: relative;
+            z-index: 2;
+            margin: 0;
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            position: relative;
+            z-index: 2;
+            margin: 12px auto 0;
+            max-width: 500px;
+            font-size: 17px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* ANA KART */
+
+        .container {
+            width: calc(100% - 30px);
+            max-width: 550px;
+            margin: -70px auto 40px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .card {
+            background: white;
+            border-radius: 26px;
+            padding: 25px;
+            box-shadow: 0 15px 45px rgba(35, 20, 60, 0.12);
+        }
+
+        /* İNCİL FOTOĞRAFI */
+
+        .book-image {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+            display: block;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            background: #eee;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .intro h2 {
+            margin: 0 0 10px;
+            color: #2d1b49;
+            font-size: 25px;
+        }
+
+        .intro p {
+            margin: 0;
+            color: #686868;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* BİLGİ KUTUSU */
+
+        .free-box {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 15px;
+            border-radius: 15px;
+            background: #f4eff9;
+            margin-bottom: 25px;
+        }
+
+        .free-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #4d2d70;
+            color: white;
+            font-size: 21px;
+        }
+
+        .free-box strong {
+            display: block;
+            color: #30203f;
+            margin-bottom: 3px;
+        }
+
+        .free-box span {
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* FORM */
+
+        .section-title {
+            margin: 25px 0 15px;
+            color: #2d1b49;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .field {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+            color: #363636;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            border: 1.5px solid #e1e1e5;
+            background: #fafafa;
+            border-radius: 13px;
+            padding: 14px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #6b4193;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(107,65,147,0.08);
+        }
+
+        textarea {
+            min-height: 105px;
+            resize: vertical;
+        }
+
+        .field-space {
+            margin-bottom: 17px;
+        }
+
+        /* BUTON */
+
+        .submit-button {
+            width: 100%;
+            border: none;
+            border-radius: 14px;
+            padding: 17px;
+            margin-top: 8px;
+            background: linear-gradient(135deg, #4d2d70, #6b4193);
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(77,45,112,0.25);
+            transition: transform 0.15s, opacity 0.15s;
+        }
+
+        .submit-button:active {
+            transform: scale(0.98);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        /* MESAJ */
+
+        #message {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        /* GÜVENLİK BİLGİSİ */
+
+        .privacy {
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* ALT */
+
+        footer {
+            text-align: center;
+            padding: 0 20px 35px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* MOBİL */
+
+        @media (max-width: 480px) {
+
+            header {
+                padding-top: 42px;
+                padding-bottom: 100px;
+            }
+
+            header h1 {
+                font-size: 29px;
+            }
+
+            header p {
+                font-size: 15px;
+            }
+
+            .container {
+                width: calc(100% - 20px);
+                margin-top: -65px;
+            }
+
+            .card {
+                padding: 19px;
+                border-radius: 22px;
+            }
+
+            .book-image {
+                height: 230px;
+            }
+
+            .row {
+                gap: 8px;
+            }
+
+            input,
+            textarea {
+                padding: 13px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">📖</div>
+
+    <h1>Ücretsiz İncil</h1>
+
+    <p>
+        İncil'i ücretsiz olarak adresinize göndermek için
+        aşağıdaki formu doldurun.
+    </p>
+
+</header>
+
+
+<div class="container">
+
+    <div class="card">
+
+        <!-- İNCİL FOTOĞRAFI -->
+        <!-- incil.jpg dosyasını index.html ile aynı klasöre koy -->
+
+        <img
+            src="incil.jpg"
+            alt="İncil"
+            class="book-image"
+        >
+
+
+        <div class="intro">
+
+            <h2>Ücretsiz İncil Talep Edin</h2>
+
+            <p>
+                Formu doldurarak ücretsiz İncil gönderim
+                talebinizi oluşturabilirsiniz.
+            </p>
+
+        </div>
+
+
+        <div class="free-box">
+
+            <div class="free-icon">
+                ✓
+            </div>
+
+            <div>
+                <strong>Ücretsiz Gönderim</strong>
+                <span>Herhangi bir ücret talep edilmez.</span>
+            </div>
+
+        </div>
+
+
+        <div class="section-title">
+            Kişisel Bilgiler
+        </div>
+
+
+        <div class="row field-space">
+
+            <div class="field">
+
+                <label for="firstName">
+                    İsim
+                </label>
+
+                <input
+                    id="firstName"
+                    type="text"
+                    placeholder="İsminiz"
+                    autocomplete="given-name"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="lastName">
+                    Soyisim
+                </label>
+
+                <input
+                    id="lastName"
+                    type="text"
+                    placeholder="Soyisminiz"
+                    autocomplete="family-name"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="field-space">
+
+            <label for="email">
+                E-posta
+            </label>
+
+            <input
+                id="email"
+                type="email"
+                placeholder="ornek@email.com"
+                autocomplete="email"
+            >
+
+        </div>
+
+
+        <div class="field-space">
+
+            <label for="phone">
+                Telefon Numarası
+            </label>
+
+            <input
+                id="phone"
+                type="tel"
+                placeholder="05XXXXXXXXX"
+                autocomplete="tel"
+            >
+
+        </div>
+
+
+        <div class="section-title">
+            Teslimat Adresi
+        </div>
+
+
+        <div class="row field-space">
+
+            <div class="field">
+
+                <label for="city">
+                    İl
+                </label>
+
+                <input
+                    id="city"
+                    type="text"
+                    placeholder="İl"
+                    autocomplete="address-level1"
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="district">
+                    İlçe
+                </label>
+
+                <input
+                    id="district"
+                    type="text"
+                    placeholder="İlçe"
+                    autocomplete="address-level2"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="field-space">
+
+            <label for="address">
+                Açık Adres
+            </label>
+
+            <textarea
+                id="address"
+                placeholder="Mahalle, sokak, bina no, daire no..."
+                autocomplete="street-address"
+            ></textarea>
+
+        </div>
+
+
+        <button
+            id="submitButton"
+            class="submit-button"
+            onclick="sendRequest()"
+        >
+            📖 Ücretsiz İncil Talep Et
+        </button>
+
+
+        <div id="message"></div>
+
+
+        <div class="privacy">
+            🔒 Girdiğiniz bilgiler yalnızca İncil gönderim
+            talebinizi işleme almak amacıyla kullanılacaktır.
+        </div>
+
+    </div>
+
+</div>
+
+
+<footer>
+    Ücretsiz İncil Gönderim Hizmeti
+</footer>
+
+
+<script type="module">
+
+    import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+    import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp
+    }
+        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    // FIREBASE
+
+    const firebaseConfig = {
+
+        apiKey: "AIzaSyDgKK2s15KW9TZyqU2OdWreHEbaooToCDI",
+
+        authDomain:
+            "siparisuygulamasi-d85c9.firebaseapp.com",
+
+        projectId:
+            "siparisuygulamasi-d85c9",
+
+        storageBucket:
+            "siparisuygulamasi-d85c9.firebasestorage.app",
+
+        messagingSenderId:
+            "1047261795095",
+
+        appId:
+            "1:1047261795095:web:1c6e5a9c13bf880e1f9d52",
+
+        measurementId:
+            "G-9F67DX2QH6"
+    };
+
+
+    const app = initializeApp(firebaseConfig);
+
+    const db = getFirestore(app);
+
+
+    // FORMU GÖNDER
+
+    window.sendRequest = async function () {
+
+        const firstName =
+            document.getElementById("firstName").value.trim();
+
+        const lastName =
+            document.getElementById("lastName").value.trim();
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const phone =
+            document.getElementById("phone").value.trim();
+
+        const city =
+            document.getElementById("city").value.trim();
+
+        const district =
+            document.getElementById("district").value.trim();
+
+        const address =
+            document.getElementById("address").value.trim();
+
+
+        // KONTROLLER
+
+        if (!firstName) {
+            showMessage("❌ Lütfen isminizi yazın.");
+            return;
+        }
+
+        if (!lastName) {
+            showMessage("❌ Lütfen soyisminizi yazın.");
+            return;
+        }
+
+        if (!email) {
+            showMessage("❌ Lütfen e-posta adresinizi yazın.");
+            return;
+        }
+
+        if (!phone) {
+            showMessage("❌ Lütfen telefon numaranızı yazın.");
+            return;
+        }
+
+        if (!city) {
+            showMessage("❌ Lütfen ilinizi yazın.");
+            return;
+        }
+
+        if (!district) {
+            showMessage("❌ Lütfen ilçenizi yazın.");
+            return;
+        }
+
+        if (!address) {
+            showMessage("❌ Lütfen açık adresinizi yazın.");
+            return;
+        }
+
+
+        const button =
+            document.getElementById("submitButton");
+
+        button.disabled = true;
+
+        showMessage("⏳ Talebiniz gönderiliyor...");
+
+
+        try {
+
+            const request = {
+
+                firstName: firstName,
+
+                lastName: lastName,
+
+                email: email,
+
+                phone: phone,
+
+                city: city,
+
+                district: district,
+
+                address: address,
+
+                status: "Yeni",
+
+                createdAt: serverTimestamp()
+
+            };
+
+
+            const docRef = await addDoc(
+                collection(db, "orders"),
+                request
+            );
+
+
+            console.log(
+                "Talep ID:",
+                docRef.id
+            );
+
+
+            showMessage(
+                "✅ Talebiniz başarıyla oluşturuldu!<br><br>" +
+                "Ücretsiz İncil gönderim talebiniz alınmıştır."
+            );
+
+
+            // FORMU TEMİZLE
+
+            document.getElementById("firstName").value = "";
+
+            document.getElementById("lastName").value = "";
+
+            document.getElementById("email").value = "";
+
+            document.getElementById("phone").value = "";
+
+            document.getElementById("city").value = "";
+
+            document.getElementById("district").value = "";
+
+            document.getElementById("address").value = "";
+
+
+        } catch (error) {
+
+            console.error(
+                "Firebase hatası:",
+                error
+            );
+
+            showMessage(
+                "❌ Talep gönderilemedi.<br>" +
+                "Lütfen internet bağlantınızı kontrol edip tekrar deneyin."
+            );
+
+            button.disabled = false;
+
+        }
+
+    };
+
+
+    function showMessage(text) {
+
+        document.getElementById("message").innerHTML = text;
+
+    }
+
+</script>
+
+</body>
+</html>
