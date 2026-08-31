@@ -7,7 +7,6 @@
     <title>Ücretsiz İncil</title>
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -30,7 +29,7 @@
             overflow: hidden;
             background: linear-gradient(135deg, #24163d, #4d2d70);
             color: white;
-            padding: 55px 22px 110px;
+            padding: 50px 22px 110px;
             text-align: center;
         }
 
@@ -103,11 +102,12 @@
 
         .book-image {
             width: 100%;
-            height: 270px;
-            object-fit: cover;
+            height: auto;
+            max-height: 600px;
+            object-fit: contain;
             display: block;
             border-radius: 20px;
-            margin-bottom: 24px;
+            margin: 0 auto 24px;
             background: #eee;
         }
 
@@ -129,7 +129,7 @@
             line-height: 1.6;
         }
 
-        /* BİLGİ KUTUSU */
+        /* ÜCRETSİZ BİLGİSİ */
 
         .free-box {
             display: flex;
@@ -256,7 +256,7 @@
             font-weight: 600;
         }
 
-        /* GÜVENLİK BİLGİSİ */
+        /* GİZLİLİK */
 
         .privacy {
             margin-top: 22px;
@@ -277,7 +277,7 @@
             font-size: 12px;
         }
 
-        /* MOBİL */
+        /* TELEFON */
 
         @media (max-width: 480px) {
 
@@ -305,7 +305,10 @@
             }
 
             .book-image {
-                height: 230px;
+                width: 100%;
+                height: auto;
+                max-height: none;
+                object-fit: contain;
             }
 
             .row {
@@ -317,7 +320,6 @@
                 padding: 13px;
             }
         }
-
     </style>
 </head>
 
@@ -341,8 +343,7 @@
 
     <div class="card">
 
-        <!-- İNCİL FOTOĞRAFI -->
-        <!-- incil.jpg dosyasını index.html ile aynı klasöre koy -->
+        <!-- incil.jpg dosyası index.html ile aynı klasörde olmalı -->
 
         <img
             src="incil.jpg"
@@ -547,7 +548,7 @@
         from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-    // FIREBASE
+    // FIREBASE AYARLARI
 
     const firebaseConfig = {
 
@@ -578,7 +579,7 @@
     const db = getFirestore(app);
 
 
-    // FORMU GÖNDER
+    // TALEP GÖNDER
 
     window.sendRequest = async function () {
 
