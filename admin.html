@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Paneli - İncil Talepleri</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                         Roboto, Arial, sans-serif;
+            background: #f5f6fa;
+            color: #222;
+        }
+
+        /* GİRİŞ EKRANI */
+
+        #loginScreen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #24163d,
+                    #5b3780
+                );
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        }
+
+        .login-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f0eafa;
+            border-radius: 20px;
+
+            font-size: 36px;
+        }
+
+        .login-card h1 {
+            margin: 0;
+            text-align: center;
+            color: #30203f;
+            font-size: 25px;
+        }
+
+        .login-card p {
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            margin: 9px 0 25px;
+        }
+
+        .login-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px;
+
+            border: 1px solid #ddd;
+            border-radius: 12px;
+
+            font-size: 15px;
+            outline: none;
+
+            margin-bottom: 15px;
+        }
+
+        .login-input:focus {
+            border-color: #68428b;
+            box-shadow: 0 0 0 3px rgba(104,66,139,0.1);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+
+            border: none;
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #43265f,
+                #6b4193
+            );
+
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .login-button:disabled {
+            opacity: 0.6;
+        }
+
+        #loginMessage {
+            text-align: center;
+            color: #d93025;
+            font-size: 13px;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+
+        /* ADMIN PANEL */
+
+        #adminPanel {
+            display: none;
+        }
+
+        header {
+            background: linear-gradient(
+                135deg,
+                #24163d,
+                #5b3780
+            );
+
+            color: white;
+            padding: 25px 20px;
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .logout-button {
+            border: 1px solid rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.1);
+            color: white;
+
+            padding: 10px 14px;
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+
+        .container {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 0 18px 40px;
+        }
+
+
+        /* İSTATİSTİKLER */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .stat-icon {
+            font-size: 25px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 8px;
+            color: #43265f;
+        }
+
+        .stat-title {
+            color: #777;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+
+        /* ARAÇLAR */
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .toolbar h2 {
+            margin: 0;
+            color: #30203f;
+        }
+
+        .refresh {
+            border: none;
+            background: #43265f;
+            color: white;
+
+            padding: 11px 17px;
+            border-radius: 10px;
+
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+
+        /* TALEP KARTI */
+
+        .order {
+            background: white;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .order-name {
+            font-size: 19px;
+            font-weight: 800;
+            color: #30203f;
+        }
+
+        .status {
+            background: #fff3cd;
+            color: #856404;
+
+            padding: 7px 11px;
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .info {
+            background: #f8f8fa;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .info.full {
+            grid-column: 1 / -1;
+        }
+
+        .info-label {
+            color: #888;
+            font-size: 11px;
+            margin-bottom: 4px;
+
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .info-value {
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+
+        .empty {
+            background: white;
+            border-radius: 18px;
+            padding: 50px 20px;
+
+            text-align: center;
+            color: #777;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+
+        @media (max-width: 650px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                align-items: flex-start;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info.full {
+                grid-column: auto;
+            }
+
+            .order-top {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<!-- ========================= -->
+<!-- GİRİŞ EKRANI -->
+<!-- ========================= -->
+
+<div id="loginScreen">
+
+    <div class="login-card">
+
+        <div class="login-icon">
+            🔐
+        </div>
+
+        <h1>Admin Paneli</h1>
+
+        <p>
+            İncil taleplerini görüntülemek için giriş yapın.
+        </p>
+
+
+        <label class="login-label">
+            E-posta
+        </label>
+
+        <input
+            id="email"
+            class="login-input"
+            type="email"
+            placeholder="Admin e-postanız"
+            autocomplete="email"
+        >
+
+
+        <label class="login-label">
+            Şifre
+        </label>
+
+        <input
+            id="password"
+            class="login-input"
+            type="password"
+            placeholder="Şifreniz"
+            autocomplete="current-password"
+        >
+
+
+        <button
+            id="loginButton"
+            class="login-button"
+            onclick="login()"
+        >
+            🔑 Giriş Yap
+        </button>
+
+
+        <div id="loginMessage"></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ========================= -->
+<!-- ADMIN PANELİ -->
+<!-- ========================= -->
+
+<div id="adminPanel">
+
+    <header>
+
+        <div class="header-content">
+
+            <div>
+
+                <h1>
+                    📖 İncil Talep Yönetimi
+                </h1>
+
+                <p>
+                    Gelen ücretsiz İncil talepleri
+                </p>
+
+            </div>
+
+
+            <button
+                class="logout-button"
+                onclick="logout()"
+            >
+                Çıkış Yap
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <div class="container">
+
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    📋
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="totalCount"
+                >
+                    0
+                </div>
+
+                <div class="stat-title">
+                    Toplam Talep
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    🆕
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="newCount"
+                >
+                    0
+                </div>
+
+                <div class="stat-title">
+                    Yeni Talep
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-icon">
+                    📖
+                </div>
+
+                <div
+                    class="stat-number"
+                    id="sentCount"
+                >
+                    0
+                </div>
+
+                <div class="stat-title">
+                    Gönderilen
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="toolbar">
+
+            <h2>
+                Gelen Talepler
+            </h2>
+
+            <button
+                class="refresh"
+                onclick="loadOrders()"
+            >
+                🔄 Yenile
+            </button>
+
+        </div>
+
+
+        <div id="orders">
+
+            <div class="loading">
+                ⏳ Talepler yükleniyor...
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script type="module">
+
+
+    /* ========================= */
+    /* FIREBASE */
+    /* ========================= */
+
+    import {
+        initializeApp
+    }
+    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+    import {
+        getFirestore,
+        collection,
+        getDocs,
+        query,
+        orderBy
+    }
+    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+    import {
+        getAuth,
+        signInWithEmailAndPassword,
+        onAuthStateChanged,
+        signOut
+    }
+    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+    const firebaseConfig = {
+
+        apiKey:
+            "AIzaSyDgKK2s15KW9TZyqU2OdWreHEbaooToCDI",
+
+        authDomain:
+            "siparisuygulamasi-d85c9.firebaseapp.com",
+
+        projectId:
+            "siparisuygulamasi-d85c9",
+
+        storageBucket:
+            "siparisuygulamasi-d85c9.firebasestorage.app",
+
+        messagingSenderId:
+            "1047261795095",
+
+        appId:
+            "1:1047261795095:web:1c6e5a9c13bf880e1f9d52",
+
+        measurementId:
+            "G-9F67DX2QH6"
+    };
+
+
+    const app =
+        initializeApp(firebaseConfig);
+
+
+    const db =
+        getFirestore(app);
+
+
+    const auth =
+        getAuth(app);
+
+
+
+    /* ========================= */
+    /* GİRİŞ */
+    /* ========================= */
+
+    window.login = async function () {
+
+        const email =
+            document.getElementById("email").value.trim();
+
+        const password =
+            document.getElementById("password").value;
+
+
+        if (!email || !password) {
+
+            showLoginMessage(
+                "❌ E-posta ve şifre gerekli."
+            );
+
+            return;
+        }
+
+
+        const button =
+            document.getElementById("loginButton");
+
+        button.disabled = true;
+
+        button.textContent =
+            "⏳ Giriş yapılıyor...";
+
+
+        try {
+
+            await signInWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            showLoginMessage("");
+
+        } catch (error) {
+
+            console.error(error);
+
+            showLoginMessage(
+                "❌ E-posta veya şifre hatalı."
+            );
+
+            button.disabled = false;
+
+            button.textContent =
+                "🔑 Giriş Yap";
+        }
+
+    };
+
+
+
+    /* ========================= */
+    /* OTURUM KONTROLÜ */
+    /* ========================= */
+
+    onAuthStateChanged(
+        auth,
+        (user) => {
+
+            if (user) {
+
+                document.getElementById(
+                    "loginScreen"
+                ).style.display = "none";
+
+
+                document.getElementById(
+                    "adminPanel"
+                ).style.display = "block";
+
+
+                loadOrders();
+
+            } else {
+
+                document.getElementById(
+                    "loginScreen"
+                ).style.display = "flex";
+
+
+                document.getElementById(
+                    "adminPanel"
+                ).style.display = "none";
+
+            }
+
+        }
+    );
+
+
+
+    /* ========================= */
+    /* ÇIKIŞ */
+    /* ========================= */
+
+    window.logout = async function () {
+
+        await signOut(auth);
+
+    };
+
+
+
+    /* ========================= */
+    /* TALEPLERİ GETİR */
+    /* ========================= */
+
+    window.loadOrders = async function () {
+
+        const container =
+            document.getElementById("orders");
+
+
+        container.innerHTML =
+            '<div class="loading">⏳ Talepler yükleniyor...</div>';
+
+
+        try {
+
+            const q =
+                query(
+                    collection(db, "orders"),
+                    orderBy("createdAt", "desc")
+                );
+
+
+            const snapshot =
+                await getDocs(q);
+
+
+            document.getElementById(
+                "totalCount"
+            ).textContent =
+                snapshot.size;
+
+
+            let newCount = 0;
+
+            let sentCount = 0;
+
+
+            if (snapshot.empty) {
+
+                container.innerHTML = `
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            📭
+                        </div>
+
+                        <strong>
+                            Henüz talep yok
+                        </strong>
+
+                        <p>
+                            Yeni İncil talepleri
+                            burada görünecek.
+                        </p>
+
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            container.innerHTML = "";
+
+
+            snapshot.forEach((doc) => {
+
+                const data =
+                    doc.data();
+
+
+                if (
+                    data.status === "Yeni"
+                ) {
+                    newCount++;
+                }
+
+
+                if (
+                    data.status === "Gönderildi"
+                ) {
+                    sentCount++;
+                }
+
+
+                let dateText =
+                    "Tarih bilinmiyor";
+
+
+                if (data.createdAt) {
+
+                    const date =
+                        data.createdAt.toDate();
+
+
+                    dateText =
+                        date.toLocaleString(
+                            "tr-TR"
+                        );
+
+                }
+
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "order";
+
+
+                card.innerHTML = `
+
+                    <div class="order-top">
+
+                        <div class="order-name">
+
+                            👤
+                            ${escapeHtml(
+                                data.firstName || ""
+                            )}
+
+                            ${escapeHtml(
+                                data.lastName || ""
+                            )}
+
+                        </div>
+
+
+                        <div class="status">
+
+                            ${escapeHtml(
+                                data.status || "Yeni"
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+
+                        <div class="info">
+
+                            <div class="info-label">
+                                E-posta
+                            </div>
+
+                            <div class="info-value">
+
+                                ${escapeHtml(
+                                    data.email || "-"
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info">
+
+                            <div class="info-label">
+                                Telefon
+                            </div>
+
+                            <div class="info-value">
+
+                                ${escapeHtml(
+                                    data.phone || "-"
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info">
+
+                            <div class="info-label">
+                                İl
+                            </div>
+
+                            <div class="info-value">
+
+                                ${escapeHtml(
+                                    data.city || "-"
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info">
+
+                            <div class="info-label">
+                                İlçe
+                            </div>
+
+                            <div class="info-value">
+
+                                ${escapeHtml(
+                                    data.district || "-"
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info full">
+
+                            <div class="info-label">
+                                Açık Adres
+                            </div>
+
+                            <div class="info-value">
+
+                                ${escapeHtml(
+                                    data.address || "-"
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="info full">
+
+                            <div class="info-label">
+                                Talep Tarihi
+                            </div>
+
+                            <div class="info-value">
+
+                                ${dateText}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(card);
+
+            });
+
+
+            document.getElementById(
+                "newCount"
+            ).textContent =
+                newCount;
+
+
+            document.getElementById(
+                "sentCount"
+            ).textContent =
+                sentCount;
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        ⚠️
+                    </div>
+
+                    <strong>
+                        Talepler yüklenemedi
+                    </strong>
+
+                    <p>
+                        Firestore güvenlik kurallarını
+                        kontrol etmeniz gerekiyor.
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    };
+
+
+
+    /* ========================= */
+    /* HTML GÜVENLİĞİ */
+    /* ========================= */
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent =
+            text;
+
+        return div.innerHTML;
+
+    }
+
+
+
+    /* ========================= */
+    /* HATA MESAJI */
+    /* ========================= */
+
+    function showLoginMessage(text) {
+
+        document.getElementById(
+            "loginMessage"
+        ).innerHTML = text;
+
+    }
+
+
+</script>
+
+</body>
+</html>
