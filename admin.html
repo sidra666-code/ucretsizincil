@@ -1,426 +1,515 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Paneli - İncil Talepleri</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                         Roboto, Arial, sans-serif;
-            background: #f5f6fa;
-            color: #222;
-        }
-
-        /* GİRİŞ EKRANI */
-
-        #loginScreen {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #24163d,
-                    #5b3780
-                );
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 420px;
-            background: white;
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-        }
-
-        .login-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 18px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: #f0eafa;
-            border-radius: 20px;
-
-            font-size: 36px;
-        }
-
-        .login-card h1 {
-            margin: 0;
-            text-align: center;
-            color: #30203f;
-            font-size: 25px;
-        }
-
-        .login-card p {
-            text-align: center;
-            color: #777;
-            font-size: 14px;
-            margin: 9px 0 25px;
-        }
-
-        .login-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 7px;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 14px;
-
-            border: 1px solid #ddd;
-            border-radius: 12px;
-
-            font-size: 15px;
-            outline: none;
-
-            margin-bottom: 15px;
-        }
-
-        .login-input:focus {
-            border-color: #68428b;
-            box-shadow: 0 0 0 3px rgba(104,66,139,0.1);
-        }
-
-        .login-button {
-            width: 100%;
-            padding: 15px;
-
-            border: none;
-            border-radius: 12px;
-
-            background: linear-gradient(
-                135deg,
-                #43265f,
-                #6b4193
-            );
-
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-
-            cursor: pointer;
-        }
-
-        .login-button:disabled {
-            opacity: 0.6;
-        }
-
-        #loginMessage {
-            text-align: center;
-            color: #d93025;
-            font-size: 13px;
-            margin-top: 15px;
-            line-height: 1.5;
-        }
-
-
-        /* ADMIN PANEL */
-
-        #adminPanel {
-            display: none;
-        }
-
-        header {
-            background: linear-gradient(
-                135deg,
-                #24163d,
-                #5b3780
-            );
-
-            color: white;
-            padding: 25px 20px;
-        }
-
-        .header-content {
-            max-width: 1000px;
-            margin: auto;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 25px;
-        }
-
-        header p {
-            margin: 6px 0 0;
-            opacity: 0.8;
-            font-size: 14px;
-        }
-
-        .logout-button {
-            border: 1px solid rgba(255,255,255,0.35);
-            background: rgba(255,255,255,0.1);
-            color: white;
-
-            padding: 10px 14px;
-            border-radius: 10px;
-
-            cursor: pointer;
-        }
-
-
-        .container {
-            max-width: 1000px;
-            margin: 25px auto;
-            padding: 0 18px 40px;
-        }
-
-
-        /* İSTATİSTİKLER */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .stat {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-
-            box-shadow:
-                0 5px 20px rgba(0,0,0,0.06);
-        }
-
-        .stat-icon {
-            font-size: 25px;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: 800;
-            margin-top: 8px;
-            color: #43265f;
-        }
-
-        .stat-title {
-            color: #777;
-            font-size: 13px;
-            margin-top: 3px;
-        }
-
-
-        /* ARAÇLAR */
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 18px;
-        }
-
-        .toolbar h2 {
-            margin: 0;
-            color: #30203f;
-        }
-
-        .refresh {
-            border: none;
-            background: #43265f;
-            color: white;
-
-            padding: 11px 17px;
-            border-radius: 10px;
-
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-
-        /* TALEP KARTI */
-
-        .order {
-            background: white;
-            border-radius: 18px;
-            padding: 20px;
-            margin-bottom: 15px;
-
-            box-shadow:
-                0 5px 20px rgba(0,0,0,0.06);
-        }
-
-        .order-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .order-name {
-            font-size: 19px;
-            font-weight: 800;
-            color: #30203f;
-        }
-
-        .status {
-            background: #fff3cd;
-            color: #856404;
-
-            padding: 7px 11px;
-            border-radius: 20px;
-
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .info {
-            background: #f8f8fa;
-            padding: 12px;
-            border-radius: 10px;
-        }
-
-        .info.full {
-            grid-column: 1 / -1;
-        }
-
-        .info-label {
-            color: #888;
-            font-size: 11px;
-            margin-bottom: 4px;
-
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .info-value {
-            font-size: 14px;
-            word-break: break-word;
-        }
-
-
-        .empty {
-            background: white;
-            border-radius: 18px;
-            padding: 50px 20px;
-
-            text-align: center;
-            color: #777;
-        }
-
-        .empty-icon {
-            font-size: 45px;
-            margin-bottom: 10px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #777;
-        }
-
-
-        @media (max-width: 650px) {
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .header-content {
-                align-items: flex-start;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .info.full {
-                grid-column: auto;
-            }
-
-            .order-top {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İncil Talepleri | Admin</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:#f4f2f7;
+    color:#25202d;
+}
+
+/* LOGIN */
+
+#loginScreen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:linear-gradient(145deg,#21152e,#704c91);
+}
+
+.login-card{
+    width:100%;
+    max-width:420px;
+    background:#fff;
+    border-radius:28px;
+    padding:34px 26px;
+    box-shadow:0 25px 70px rgba(0,0,0,.28);
+}
+
+.login-logo{
+    width:76px;
+    height:76px;
+    margin:0 auto 18px;
+    border-radius:23px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:38px;
+    background:#eee5f6;
+}
+
+.login-card h1{
+    text-align:center;
+    margin:0;
+    font-size:26px;
+    color:#30213c;
+}
+
+.login-card p{
+    text-align:center;
+    color:#81798a;
+    margin:8px 0 27px;
+    font-size:14px;
+}
+
+label{
+    display:block;
+    margin-bottom:7px;
+    font-size:13px;
+    font-weight:700;
+}
+
+input{
+    width:100%;
+    border:1px solid #ddd7e3;
+    border-radius:13px;
+    padding:14px;
+    font-size:15px;
+    outline:none;
+    margin-bottom:16px;
+}
+
+input:focus{
+    border-color:#704c91;
+    box-shadow:0 0 0 4px rgba(112,76,145,.10);
+}
+
+.login-button{
+    width:100%;
+    border:0;
+    border-radius:14px;
+    padding:15px;
+    color:#fff;
+    background:linear-gradient(135deg,#492c61,#79529a);
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+#loginMessage{
+    text-align:center;
+    margin-top:14px;
+    color:#d33b3b;
+    font-size:13px;
+}
+
+
+/* ADMIN */
+
+#adminPanel{
+    display:none;
+}
+
+.topbar{
+    background:linear-gradient(135deg,#24172f,#69478a);
+    color:white;
+    padding:22px 18px 28px;
+    box-shadow:0 5px 25px rgba(0,0,0,.12);
+}
+
+.topbar-inner{
+    max-width:1050px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:13px;
+}
+
+.brand-icon{
+    width:50px;
+    height:50px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,.13);
+    font-size:25px;
+}
+
+.brand h1{
+    margin:0;
+    font-size:20px;
+}
+
+.brand p{
+    margin:4px 0 0;
+    font-size:12px;
+    opacity:.75;
+}
+
+.logout{
+    border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.1);
+    color:#fff;
+    border-radius:11px;
+    padding:10px 13px;
+    cursor:pointer;
+}
+
+
+/* CONTENT */
+
+.container{
+    max-width:1050px;
+    margin:auto;
+    padding:22px 17px 50px;
+}
+
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:13px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:#fff;
+    border-radius:17px;
+    padding:17px;
+    box-shadow:0 5px 22px rgba(40,20,60,.06);
+}
+
+.stat-icon{
+    font-size:22px;
+}
+
+.stat-number{
+    font-size:25px;
+    font-weight:900;
+    margin-top:7px;
+    color:#43275a;
+}
+
+.stat-title{
+    color:#8a8490;
+    font-size:12px;
+    margin-top:2px;
+}
+
+
+/* HEADER */
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+}
+
+.section-header h2{
+    margin:0;
+    font-size:21px;
+}
+
+.refresh{
+    border:0;
+    background:#fff;
+    color:#4c3260;
+    padding:10px 14px;
+    border-radius:11px;
+    box-shadow:0 4px 15px rgba(0,0,0,.07);
+    font-weight:700;
+    cursor:pointer;
+}
+
+
+/* ORDER CARD */
+
+.order{
+    background:#fff;
+    border-radius:21px;
+    padding:19px;
+    margin-bottom:15px;
+    box-shadow:0 6px 25px rgba(40,20,60,.07);
+    border:1px solid #eeeaf1;
+}
+
+.order-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:17px;
+}
+
+.person{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
+
+.avatar{
+    width:45px;
+    height:45px;
+    border-radius:14px;
+    background:#eee6f5;
+    color:#57376f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    font-weight:900;
+}
+
+.person-name{
+    font-weight:900;
+    font-size:17px;
+}
+
+.date{
+    color:#918a96;
+    font-size:11px;
+    margin-top:3px;
+}
+
+.status{
+    padding:7px 10px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.status-new{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.status-accepted{
+    background:#dff6e7;
+    color:#207443;
+}
+
+.status-rejected{
+    background:#fde2e2;
+    color:#b32c2c;
+}
+
+
+/* INFO */
+
+.info-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+}
+
+.info{
+    background:#f8f7fa;
+    border-radius:12px;
+    padding:11px;
+}
+
+.info.full{
+    grid-column:1/-1;
+}
+
+.info-label{
+    color:#948d99;
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+    margin-bottom:4px;
+}
+
+.info-value{
+    font-size:13px;
+    line-height:1.4;
+    word-break:break-word;
+}
+
+
+/* BUTTONS */
+
+.actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:17px;
+    padding-top:15px;
+    border-top:1px solid #eeeaf0;
+}
+
+.accept,
+.reject{
+    border:0;
+    padding:13px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.accept{
+    background:#e2f7e9;
+    color:#237743;
+}
+
+.reject{
+    background:#fde7e7;
+    color:#b52f2f;
+}
+
+.accept:hover{
+    background:#ccefd8;
+}
+
+.reject:hover{
+    background:#f9d4d4;
+}
+
+.accept:disabled,
+.reject:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+
+/* EMPTY */
+
+.empty{
+    background:#fff;
+    border-radius:20px;
+    padding:55px 20px;
+    text-align:center;
+    box-shadow:0 5px 22px rgba(0,0,0,.05);
+}
+
+.empty-icon{
+    font-size:45px;
+    margin-bottom:10px;
+}
+
+.empty strong{
+    font-size:17px;
+}
+
+.empty p{
+    color:#888;
+    font-size:13px;
+}
+
+
+/* LOADING */
+
+.loading{
+    text-align:center;
+    padding:45px;
+    color:#817a88;
+}
+
+
+/* MOBILE */
+
+@media(max-width:750px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:560px){
+
+    .topbar-inner{
+        align-items:flex-start;
+    }
+
+    .brand h1{
+        font-size:17px;
+    }
+
+    .brand p{
+        font-size:11px;
+    }
+
+    .logout{
+        padding:9px 10px;
+        font-size:12px;
+    }
+
+    .section-header h2{
+        font-size:18px;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .info.full{
+        grid-column:auto;
+    }
+
+    .order-head{
+        flex-direction:column;
+    }
+
+    .status{
+        align-self:flex-start;
+    }
+
+}
+
+</style>
 </head>
-
 
 <body>
 
 
-<!-- ========================= -->
-<!-- GİRİŞ EKRANI -->
-<!-- ========================= -->
+<!-- LOGIN -->
 
 <div id="loginScreen">
 
     <div class="login-card">
 
-        <div class="login-icon">
+        <div class="login-logo">
             🔐
         </div>
 
         <h1>Admin Paneli</h1>
 
         <p>
-            İncil taleplerini görüntülemek için giriş yapın.
+            İncil taleplerini yönetmek için giriş yapın.
         </p>
 
-
-        <label class="login-label">
-            E-posta
-        </label>
+        <label>E-posta</label>
 
         <input
             id="email"
-            class="login-input"
             type="email"
-            placeholder="Admin e-postanız"
+            placeholder="Admin e-postası"
             autocomplete="email"
         >
 
-
-        <label class="login-label">
-            Şifre
-        </label>
+        <label>Şifre</label>
 
         <input
             id="password"
-            class="login-input"
             type="password"
-            placeholder="Şifreniz"
+            placeholder="Şifre"
             autocomplete="current-password"
         >
-
 
         <button
             id="loginButton"
@@ -430,7 +519,6 @@
             🔑 Giriş Yap
         </button>
 
-
         <div id="loginMessage"></div>
 
     </div>
@@ -438,110 +526,99 @@
 </div>
 
 
-
-<!-- ========================= -->
-<!-- ADMIN PANELİ -->
-<!-- ========================= -->
+<!-- ADMIN -->
 
 <div id="adminPanel">
 
-    <header>
+    <div class="topbar">
 
-        <div class="header-content">
+        <div class="topbar-inner">
 
-            <div>
+            <div class="brand">
 
-                <h1>
-                    📖 İncil Talep Yönetimi
-                </h1>
+                <div class="brand-icon">
+                    📖
+                </div>
 
-                <p>
-                    Gelen ücretsiz İncil talepleri
-                </p>
+                <div>
+                    <h1>İncil Talepleri</h1>
+                    <p>Yönetim Paneli</p>
+                </div>
 
             </div>
 
-
             <button
-                class="logout-button"
+                class="logout"
                 onclick="logout()"
             >
-                Çıkış Yap
+                Çıkış
             </button>
 
         </div>
 
-    </header>
+    </div>
 
 
     <div class="container">
 
 
+        <!-- STATS -->
+
         <div class="stats">
 
             <div class="stat">
-
-                <div class="stat-icon">
-                    📋
-                </div>
-
+                <div class="stat-icon">📋</div>
                 <div
                     class="stat-number"
                     id="totalCount"
-                >
-                    0
-                </div>
-
+                >0</div>
                 <div class="stat-title">
-                    Toplam Talep
+                    Toplam
                 </div>
-
             </div>
 
 
             <div class="stat">
-
-                <div class="stat-icon">
-                    🆕
-                </div>
-
+                <div class="stat-icon">🆕</div>
                 <div
                     class="stat-number"
                     id="newCount"
-                >
-                    0
-                </div>
-
+                >0</div>
                 <div class="stat-title">
-                    Yeni Talep
+                    Yeni
                 </div>
-
             </div>
 
 
             <div class="stat">
-
-                <div class="stat-icon">
-                    📖
-                </div>
-
+                <div class="stat-icon">✅</div>
                 <div
                     class="stat-number"
-                    id="sentCount"
-                >
-                    0
-                </div>
-
+                    id="acceptedCount"
+                >0</div>
                 <div class="stat-title">
-                    Gönderilen
+                    Kabul
                 </div>
+            </div>
 
+
+            <div class="stat">
+                <div class="stat-icon">❌</div>
+                <div
+                    class="stat-number"
+                    id="rejectedCount"
+                >0</div>
+                <div class="stat-title">
+                    Red
+                </div>
             </div>
 
         </div>
 
 
-        <div class="toolbar">
+        <!-- HEADER -->
+
+        <div class="section-header">
 
             <h2>
                 Gelen Talepler
@@ -574,293 +651,316 @@
 <script type="module">
 
 
-    /* ========================= */
-    /* FIREBASE */
-    /* ========================= */
+/* FIREBASE */
 
-    import {
-        initializeApp
+import {
+    initializeApp
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    query,
+    orderBy,
+    doc,
+    updateDoc
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+}
+from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyDgKK2s15KW9TZyqU2OdWreHEbaooToCDI",
+
+    authDomain:
+        "siparisuygulamasi-d85c9.firebaseapp.com",
+
+    projectId:
+        "siparisuygulamasi-d85c9",
+
+    storageBucket:
+        "siparisuygulamasi-d85c9.firebasestorage.app",
+
+    messagingSenderId:
+        "1047261795095",
+
+    appId:
+        "1:1047261795095:web:1c6e5a9c13bf880e1f9d52",
+
+    measurementId:
+        "G-9F67DX2QH6"
+};
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getFirestore(app);
+
+const auth =
+    getAuth(app);
+
+
+
+/* LOGIN */
+
+window.login = async function(){
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const button =
+        document.getElementById("loginButton");
+
+
+    if(!email || !password){
+
+        document.getElementById(
+            "loginMessage"
+        ).textContent =
+            "E-posta ve şifre gerekli.";
+
+        return;
     }
-    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
 
-    import {
-        getFirestore,
-        collection,
-        getDocs,
-        query,
-        orderBy
+    button.disabled = true;
+
+    button.textContent =
+        "⏳ Giriş yapılıyor...";
+
+
+    try{
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        document.getElementById(
+            "loginMessage"
+        ).textContent =
+            "❌ E-posta veya şifre hatalı.";
+
+        button.disabled = false;
+
+        button.textContent =
+            "🔑 Giriş Yap";
     }
-    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+};
 
 
-    import {
-        getAuth,
-        signInWithEmailAndPassword,
-        onAuthStateChanged,
-        signOut
+
+/* AUTH */
+
+onAuthStateChanged(
+    auth,
+    user => {
+
+        if(user){
+
+            document.getElementById(
+                "loginScreen"
+            ).style.display =
+                "none";
+
+            document.getElementById(
+                "adminPanel"
+            ).style.display =
+                "block";
+
+            loadOrders();
+
+        }else{
+
+            document.getElementById(
+                "loginScreen"
+            ).style.display =
+                "flex";
+
+            document.getElementById(
+                "adminPanel"
+            ).style.display =
+                "none";
+        }
+
     }
-    from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-
-    const firebaseConfig = {
-
-        apiKey:
-            "AIzaSyDgKK2s15KW9TZyqU2OdWreHEbaooToCDI",
-
-        authDomain:
-            "siparisuygulamasi-d85c9.firebaseapp.com",
-
-        projectId:
-            "siparisuygulamasi-d85c9",
-
-        storageBucket:
-            "siparisuygulamasi-d85c9.firebasestorage.app",
-
-        messagingSenderId:
-            "1047261795095",
-
-        appId:
-            "1:1047261795095:web:1c6e5a9c13bf880e1f9d52",
-
-        measurementId:
-            "G-9F67DX2QH6"
-    };
-
-
-    const app =
-        initializeApp(firebaseConfig);
-
-
-    const db =
-        getFirestore(app);
-
-
-    const auth =
-        getAuth(app);
+);
 
 
 
-    /* ========================= */
-    /* GİRİŞ */
-    /* ========================= */
+/* LOGOUT */
 
-    window.login = async function () {
+window.logout = async function(){
 
-        const email =
-            document.getElementById("email").value.trim();
+    await signOut(auth);
 
-        const password =
-            document.getElementById("password").value;
+};
 
 
-        if (!email || !password) {
 
-            showLoginMessage(
-                "❌ E-posta ve şifre gerekli."
+/* LOAD ORDERS */
+
+window.loadOrders = async function(){
+
+    const container =
+        document.getElementById("orders");
+
+
+    container.innerHTML =
+        '<div class="loading">⏳ Talepler yükleniyor...</div>';
+
+
+    try{
+
+        const q =
+            query(
+                collection(db,"orders"),
+                orderBy("createdAt","desc")
             );
+
+
+        const snapshot =
+            await getDocs(q);
+
+
+        let newCount = 0;
+        let acceptedCount = 0;
+        let rejectedCount = 0;
+
+
+        if(snapshot.empty){
+
+            updateStats(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        📭
+                    </div>
+
+                    <strong>
+                        Henüz talep yok
+                    </strong>
+
+                    <p>
+                        Yeni İncil talepleri
+                        burada görünecek.
+                    </p>
+
+                </div>
+
+            `;
 
             return;
         }
 
 
-        const button =
-            document.getElementById("loginButton");
-
-        button.disabled = true;
-
-        button.textContent =
-            "⏳ Giriş yapılıyor...";
+        container.innerHTML = "";
 
 
-        try {
-
-            await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
-
-            showLoginMessage("");
-
-        } catch (error) {
-
-            console.error(error);
-
-            showLoginMessage(
-                "❌ E-posta veya şifre hatalı."
-            );
-
-            button.disabled = false;
-
-            button.textContent =
-                "🔑 Giriş Yap";
-        }
-
-    };
-
-
-
-    /* ========================= */
-    /* OTURUM KONTROLÜ */
-    /* ========================= */
-
-    onAuthStateChanged(
-        auth,
-        (user) => {
-
-            if (user) {
-
-                document.getElementById(
-                    "loginScreen"
-                ).style.display = "none";
-
-
-                document.getElementById(
-                    "adminPanel"
-                ).style.display = "block";
-
-
-                loadOrders();
-
-            } else {
-
-                document.getElementById(
-                    "loginScreen"
-                ).style.display = "flex";
-
-
-                document.getElementById(
-                    "adminPanel"
-                ).style.display = "none";
-
-            }
-
-        }
-    );
-
-
-
-    /* ========================= */
-    /* ÇIKIŞ */
-    /* ========================= */
-
-    window.logout = async function () {
-
-        await signOut(auth);
-
-    };
-
-
-
-    /* ========================= */
-    /* TALEPLERİ GETİR */
-    /* ========================= */
-
-    window.loadOrders = async function () {
-
-        const container =
-            document.getElementById("orders");
-
-
-        container.innerHTML =
-            '<div class="loading">⏳ Talepler yükleniyor...</div>';
-
-
-        try {
-
-            const q =
-                query(
-                    collection(db, "orders"),
-                    orderBy("createdAt", "desc")
-                );
-
-
-            const snapshot =
-                await getDocs(q);
-
-
-            document.getElementById(
-                "totalCount"
-            ).textContent =
-                snapshot.size;
-
-
-            let newCount = 0;
-
-            let sentCount = 0;
-
-
-            if (snapshot.empty) {
-
-                container.innerHTML = `
-                    <div class="empty">
-
-                        <div class="empty-icon">
-                            📭
-                        </div>
-
-                        <strong>
-                            Henüz talep yok
-                        </strong>
-
-                        <p>
-                            Yeni İncil talepleri
-                            burada görünecek.
-                        </p>
-
-                    </div>
-                `;
-
-                return;
-            }
-
-
-            container.innerHTML = "";
-
-
-            snapshot.forEach((doc) => {
+        snapshot.forEach(
+            orderDoc => {
 
                 const data =
-                    doc.data();
+                    orderDoc.data();
 
 
-                if (
-                    data.status === "Yeni"
-                ) {
+                const status =
+                    data.status || "Yeni";
+
+
+                if(status === "Yeni")
                     newCount++;
-                }
 
+                if(status === "Kabul Edildi")
+                    acceptedCount++;
 
-                if (
-                    data.status === "Gönderildi"
-                ) {
-                    sentCount++;
-                }
+                if(status === "Reddedildi")
+                    rejectedCount++;
 
 
                 let dateText =
                     "Tarih bilinmiyor";
 
 
-                if (data.createdAt) {
+                if(data.createdAt){
 
-                    const date =
-                        data.createdAt.toDate();
+                    try{
 
+                        dateText =
+                            data.createdAt
+                            .toDate()
+                            .toLocaleString(
+                                "tr-TR"
+                            );
 
-                    dateText =
-                        date.toLocaleString(
-                            "tr-TR"
-                        );
+                    }catch(e){}
 
                 }
 
 
+                const firstName =
+                    data.firstName || "";
+
+                const lastName =
+                    data.lastName || "";
+
+
+                const initials =
+                    (
+                        firstName.charAt(0) +
+                        lastName.charAt(0)
+                    ).toUpperCase();
+
+
+                let statusClass =
+                    "status-new";
+
+
+                if(status === "Kabul Edildi")
+                    statusClass =
+                        "status-accepted";
+
+
+                if(status === "Reddedildi")
+                    statusClass =
+                        "status-rejected";
+
+
                 const card =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 card.className =
@@ -869,27 +969,35 @@
 
                 card.innerHTML = `
 
-                    <div class="order-top">
+                    <div class="order-head">
 
-                        <div class="order-name">
+                        <div class="person">
 
-                            👤
-                            ${escapeHtml(
-                                data.firstName || ""
-                            )}
+                            <div class="avatar">
+                                ${escapeHtml(initials || "👤")}
+                            </div>
 
-                            ${escapeHtml(
-                                data.lastName || ""
-                            )}
+                            <div>
+
+                                <div class="person-name">
+
+                                    ${escapeHtml(firstName)}
+                                    ${escapeHtml(lastName)}
+
+                                </div>
+
+                                <div class="date">
+                                    ${escapeHtml(dateText)}
+                                </div>
+
+                            </div>
 
                         </div>
 
 
-                        <div class="status">
+                        <div class="status ${statusClass}">
 
-                            ${escapeHtml(
-                                data.status || "Yeni"
-                            )}
+                            ${escapeHtml(status)}
 
                         </div>
 
@@ -906,11 +1014,7 @@
                             </div>
 
                             <div class="info-value">
-
-                                ${escapeHtml(
-                                    data.email || "-"
-                                )}
-
+                                ${escapeHtml(data.email || "-")}
                             </div>
 
                         </div>
@@ -923,11 +1027,7 @@
                             </div>
 
                             <div class="info-value">
-
-                                ${escapeHtml(
-                                    data.phone || "-"
-                                )}
-
+                                ${escapeHtml(data.phone || "-")}
                             </div>
 
                         </div>
@@ -940,11 +1040,7 @@
                             </div>
 
                             <div class="info-value">
-
-                                ${escapeHtml(
-                                    data.city || "-"
-                                )}
-
+                                ${escapeHtml(data.city || "-")}
                             </div>
 
                         </div>
@@ -957,11 +1053,7 @@
                             </div>
 
                             <div class="info-value">
-
-                                ${escapeHtml(
-                                    data.district || "-"
-                                )}
-
+                                ${escapeHtml(data.district || "-")}
                             </div>
 
                         </div>
@@ -974,30 +1066,32 @@
                             </div>
 
                             <div class="info-value">
-
-                                ${escapeHtml(
-                                    data.address || "-"
-                                )}
-
+                                ${escapeHtml(data.address || "-")}
                             </div>
 
                         </div>
 
+                    </div>
 
-                        <div class="info full">
 
-                            <div class="info-label">
-                                Talep Tarihi
-                            </div>
+                    <div class="actions">
 
-                            <div class="info-value">
+                        <button
+                            class="accept"
+                            ${status === "Kabul Edildi" ? "disabled" : ""}
+                            onclick="changeStatus('${orderDoc.id}','Kabul Edildi',this)"
+                        >
+                            ✅ Kabul Et
+                        </button>
 
-                                ${dateText}
 
-                            </div>
-
-                        </div>
-
+                        <button
+                            class="reject"
+                            ${status === "Reddedildi" ? "disabled" : ""}
+                            onclick="changeStatus('${orderDoc.id}','Reddedildi',this)"
+                        >
+                            ❌ Reddet
+                        </button>
 
                     </div>
 
@@ -1006,46 +1100,107 @@
 
                 container.appendChild(card);
 
-            });
+            }
+        );
 
 
-            document.getElementById(
-                "newCount"
-            ).textContent =
-                newCount;
+        updateStats(
+            snapshot.size,
+            newCount,
+            acceptedCount,
+            rejectedCount
+        );
 
 
-            document.getElementById(
-                "sentCount"
-            ).textContent =
-                sentCount;
+    }catch(error){
+
+        console.error(error);
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ⚠️
+                </div>
+
+                <strong>
+                    Talepler yüklenemedi
+                </strong>
+
+                <p>
+                    Firebase bağlantısını
+                    ve Firestore Rules ayarlarını
+                    kontrol edin.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+};
 
 
-        } catch (error) {
+
+/* CHANGE STATUS */
+
+window.changeStatus =
+    async function(
+        id,
+        newStatus,
+        button
+    ){
+
+        const card =
+            button.closest(".order");
+
+
+        const buttons =
+            card.querySelectorAll(
+                "button"
+            );
+
+
+        buttons.forEach(
+            b => b.disabled = true
+        );
+
+
+        button.textContent =
+            "⏳ Kaydediliyor...";
+
+
+        try{
+
+            await updateDoc(
+                doc(
+                    db,
+                    "orders",
+                    id
+                ),
+                {
+                    status:newStatus
+                }
+            );
+
+
+            await loadOrders();
+
+
+        }catch(error){
 
             console.error(error);
 
+            alert(
+                "❌ Durum değiştirilemedi."
+            );
 
-            container.innerHTML = `
 
-                <div class="empty">
-
-                    <div class="empty-icon">
-                        ⚠️
-                    </div>
-
-                    <strong>
-                        Talepler yüklenemedi
-                    </strong>
-
-                    <p>
-                        Firestore güvenlik kurallarını
-                        kontrol etmeniz gerekiyor.
-                    </p>
-
-                </div>
-
-            `;
+            buttons.forEach(
+                b => b.disabled = false
+            );
 
         }
 
@@ -1053,36 +1208,51 @@
 
 
 
-    /* ========================= */
-    /* HTML GÜVENLİĞİ */
-    /* ========================= */
+/* STATS */
 
-    function escapeHtml(text) {
+function updateStats(
+    total,
+    newCount,
+    accepted,
+    rejected
+){
 
-        const div =
-            document.createElement("div");
-
-        div.textContent =
-            text;
-
-        return div.innerHTML;
-
-    }
+    document.getElementById(
+        "totalCount"
+    ).textContent = total;
 
 
+    document.getElementById(
+        "newCount"
+    ).textContent = newCount;
 
-    /* ========================= */
-    /* HATA MESAJI */
-    /* ========================= */
 
-    function showLoginMessage(text) {
+    document.getElementById(
+        "acceptedCount"
+    ).textContent = accepted;
 
-        document.getElementById(
-            "loginMessage"
-        ).innerHTML = text;
 
-    }
+    document.getElementById(
+        "rejectedCount"
+    ).textContent = rejected;
 
+}
+
+
+
+/* HTML SECURITY */
+
+function escapeHtml(text){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(text);
+
+    return div.innerHTML;
+
+}
 
 </script>
 
